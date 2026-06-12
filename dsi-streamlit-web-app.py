@@ -4,7 +4,12 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import sklearn
+import numpy
 
+
+print("sklearn:", sklearn.__version__)
+print("numpy:", numpy.__version__)
 
 # load our model pipeline object
 
@@ -50,7 +55,15 @@ if st.button("Submit For Prediction"):
     new_data = pd.DataFrame({"age" : [age], "gender" : [gender], "credit_score": [credit_score]})
     
     # apply model pipeline to the input data and extract probability prediction
-    pred_proba = model.predict_proba(new_data)[0][1]
-        
-    # output prediction
-    st.subheader(f"Based on these customer attributes, our model predicts a purchase probability of {pred_proba:.0%}")
+    try:
+        pred_proba = model.predict_proba(new_data)[0][1]
+        st.subheader(
+        f"Based on these customer attributes, our model predicts a purchase probability of {pred_proba:.0%}"
+    )
+
+    except Exception as e:
+        st.error(f"ERROR: {type(e).__name__}")
+        st.error(str(e))
+ 
+    
+
